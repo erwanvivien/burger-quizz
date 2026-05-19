@@ -95,6 +95,10 @@ app.prepare().then(() => {
       const state = rooms.get(roomId);
       if (!state || state.teams.length < 2) return;
       state.phase = "playing";
+      for (const team of state.teams) {
+        team.score = 0;
+      }
+
       broadcastState(roomId);
     });
 
@@ -109,7 +113,17 @@ app.prepare().then(() => {
       const state = rooms.get(roomId);
       if (!state) return;
       const team = state.teams.find((t) => t.id === teamId);
-      if (team) team.score = Math.max(0, team.score + delta);
+      if (team) {
+        if (team.score === 25) {
+          return;
+        }
+
+        team.score = Math.max(0, team.score + delta);
+        team.score = Math.min(25, team.score);
+        if (team.score === 25) {
+          state.phase = "finished";
+        }
+      }
       broadcastState(roomId);
     });
 
