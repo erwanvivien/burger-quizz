@@ -1,3 +1,18 @@
+:root {
+  --bg: #1a0a00;
+  --surface: #2d1500;
+  --surface2: #3d2000;
+  --primary: #e8392a;
+  --secondary: #ffb800;
+  --success: #22c55e;
+  --text: #fff5e0;
+  --text-muted: #c49a6c;
+  --red: #e8392a;
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --yellow: #eab308;
+}
+
 html {
   height: 100%;
 }
@@ -12,8 +27,8 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--text);
+  background: var(--bg);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -28,4 +43,26 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+@keyframes pulse-buzz {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(232, 57, 42, 0.4);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 50px rgba(232, 57, 42, 0.9);
+  }
+}
+
+@keyframes glow-buzz {
+  0%,
+  100% {
+    box-shadow: 0 0 20px var(--glow-color, rgba(232, 57, 42, 0.4));
+  }
+  50% {
+    box-shadow: 0 0 60px var(--glow-color, rgba(232, 57, 42, 0.9));
+  }
 }
