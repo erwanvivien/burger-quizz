@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useState, useRef, Suspense } from "react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { io, Socket } from "socket.io-client";
 import type {
   RoomState,
@@ -11,30 +11,78 @@ import type {
 } from "@/lib/types";
 import { COLOR_HEX } from "@/lib/types";
 
+// Burger
+import topbread from "@/public/top-bread.png";
+import emptytopbread from "@/public/empty-top-bread.png";
+import toptomato from "@/public/top-tomato.png";
+import emptytoptomato from "@/public/empty-top-tomato.png";
+import topmeat from "@/public/top-meat.png";
+import emptytopmeat from "@/public/empty-top-meat.png";
+import cheese from "@/public/cheese.png";
+import emptycheese from "@/public/empty-cheese.png";
+import salad from "@/public/salad.png";
+import emptysalad from "@/public/empty-salad.png";
+import middleburger from "@/public/middle-burger.png";
+import emptymiddleburger from "@/public/empty-middle-burger.png";
+import basetomato from "@/public/base-tomato.png";
+import emptybasetomato from "@/public/empty-base-tomato.png";
+import basemeat from "@/public/base-meat.png";
+import emptybasemeat from "@/public/empty-base-meat.png";
+import baseburger from "@/public/base-burger.png";
+import emptybaseburger from "@/public/empty-base-burger.png";
+
+// Cup
+import straw from "@/public/straw.png";
+import emptystraw from "@/public/empty-straw.png";
+import topcup from "@/public/top-cup.png";
+import emptytopcup from "@/public/empty-top-cup.png";
+import cup from "@/public/cup.png";
+import emptycup from "@/public/empty-cup.png";
+
+// Sauces
+import tubeketchup from "@/public/tube-ketchup.png";
+import tubemayo from "@/public/tube-mayo.png";
+import emptymayoketchup from "@/public/empty-mayo-ketchup.png";
+import saltpepper from "@/public/salt-pepper.png";
+import emptysaltpepper from "@/public/empty-salt-pepper.png";
+
+// Fries
+import bucket from "@/public/bucket.png";
+import emptybucket from "@/public/empty-bucket.png";
+import frie1 from "@/public/frie-1.png";
+import emptyfrie1 from "@/public/empty-frie-1.png";
+import frie2 from "@/public/frie-2.png";
+import emptyfrie2 from "@/public/empty-frie-2.png";
+import frie3 from "@/public/frie-3.png";
+import emptyfrie3 from "@/public/empty-frie-3.png";
+import frie4 from "@/public/frie-4.png";
+import emptyfrie4 from "@/public/empty-frie-4.png";
+
 type PageProps = { params: Promise<{ roomId: string }> };
 
 // ── Meal display components ───────────────────────────────────────────────────
 
 const BURGER_LAYERS = [
-  { file: "top-bread", minScore: 9 },
-  { file: "top-tomato", minScore: 8 },
-  { file: "top-meat", minScore: 7 },
-  { file: "cheese", minScore: 6 },
-  { file: "salad", minScore: 5 },
-  { file: "middle-burger", minScore: 4 },
-  { file: "base-tomato", minScore: 3 },
-  { file: "base-meat", minScore: 2 },
-  { file: "salad", minScore: 1 },
-  { file: "base-burger", minScore: 0 },
+  { file: topbread, empty: emptytopbread, minScore: 9 },
+  { file: toptomato, empty: emptytoptomato, minScore: 8 },
+  { file: topmeat, empty: emptytopmeat, minScore: 7 },
+  { file: cheese, empty: emptycheese, minScore: 6 },
+  { file: salad, empty: emptysalad, minScore: 5 },
+  { file: middleburger, empty: emptymiddleburger, minScore: 4 },
+  { file: basetomato, empty: emptybasetomato, minScore: 3 },
+  { file: basemeat, empty: emptybasemeat, minScore: 2 },
+  { file: salad, empty: emptysalad, minScore: 1 },
+  { file: baseburger, empty: emptybaseburger, minScore: 0 },
 ];
 
-function MealImg({ src, w }: { src: string; w: number }) {
+function MealImg({ src }: { src: StaticImageData }) {
   return (
     <Image
       src={src}
       alt=""
-      width={w}
-      height={w}
+      width={0}
+      height={0}
+      sizes="100vw"
       style={{ width: "100%", height: "auto", display: "block" }}
     />
   );
@@ -43,12 +91,9 @@ function MealImg({ src, w }: { src: string; w: number }) {
 function BurgerStack({ score, w }: { score: number; w: number }) {
   return (
     <div style={{ width: w }}>
-      {BURGER_LAYERS.map(({ file, minScore }, i) => (
-        <div key={file + i} style={{ marginTop: i === 0 ? 0 : "-3%" }}>
-          <MealImg
-            src={score > minScore ? `/${file}.png` : `/empty-${file}.png`}
-            w={w}
-          />
+      {BURGER_LAYERS.map(({ file, empty, minScore }, i) => (
+        <div key={i} style={{ marginTop: i === 0 ? 0 : "-3%" }}>
+          <MealImg src={score > minScore ? file : empty} />
         </div>
       ))}
     </div>
@@ -66,12 +111,12 @@ function DrinkStack({ score, w }: { score: number; w: number }) {
         }}
       >
         <div style={{ width: "78%" }}>
-          <MealImg src={score > 12 ? "/straw.png" : "/empty-straw.png"} w={w} />
+          <MealImg src={score > 12 ? straw : emptystraw} />
         </div>
       </div>
-      <MealImg src={score > 11 ? "/top-cup.png" : "/empty-top-cup.png"} w={w} />
+      <MealImg src={score > 11 ? topcup : emptytopcup} />
       <div style={{ marginTop: "-8%" }}>
-        <MealImg src={score > 10 ? "/cup.png" : "/empty-cup.png"} w={w} />
+        <MealImg src={score > 10 ? cup : emptycup} />
       </div>
     </div>
   );
@@ -93,59 +138,39 @@ function CondimentsStack({ score, w }: { score: number; w: number }) {
     >
       <div style={{ display: "flex", gap: "2px", width: "100%" }}>
         <div style={{ flex: 1 }}>
-          <MealImg
-            src={hasKetchup ? "/tube-ketchup.png" : "/empty-mayo-ketchup.png"}
-            w={w / 2}
-          />
+          <MealImg src={hasKetchup ? tubeketchup : emptymayoketchup} />
         </div>
         <div style={{ flex: 1 }}>
-          <MealImg
-            src={hasMayo ? "/tube-mayo.png" : "/empty-mayo-ketchup.png"}
-            w={w / 2}
-          />
+          <MealImg src={hasMayo ? tubemayo : emptymayoketchup} />
         </div>
       </div>
-      <MealImg
-        src={hasSaltPepper ? "/salt-pepper.png" : "/empty-salt-pepper.png"}
-        w={w}
-      />
+      <MealImg src={hasSaltPepper ? saltpepper : emptysaltpepper} />
     </div>
   );
 }
 
 function FriesStack({ score, w }: { score: number; w: number }) {
   const count = Math.min(Math.max(score - 16, 0), 9);
+  const images = [frie1, frie2, frie3, frie4];
+  const emptyImages = [emptyfrie1, emptyfrie2, emptyfrie3, emptyfrie4];
+
   return (
     <div style={{ width: w }}>
       <div style={{ display: "flex" }}>
         {Array.from({ length: 4 }, (_, i) => (
           <div key={i} style={{ width: "50px" }}>
-            <MealImg
-              src={
-                count > 5 + i
-                  ? `/frie-${i + 1}.png`
-                  : `/empty-frie-${i + 1}.png`
-              }
-              w={w}
-            />
+            <MealImg src={count > 5 + i ? images[i] : emptyImages[i]} />
           </div>
         ))}
       </div>
       <div style={{ display: "flex" }}>
         {Array.from({ length: 4 }, (_, i) => (
           <div key={i} style={{ width: "50px" }}>
-            <MealImg
-              src={
-                count > 1 + i
-                  ? `/frie-${i + 1}.png`
-                  : `/empty-frie-${i + 1}.png`
-              }
-              w={w}
-            />
+            <MealImg src={count > 5 + i ? images[i] : emptyImages[i]} />
           </div>
         ))}
       </div>
-      <MealImg src={count > 0 ? "/bucket.png" : "/empty-bucket.png"} w={w} />
+      <MealImg src={count > 0 ? bucket : emptybucket} />
     </div>
   );
 }
