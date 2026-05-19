@@ -268,8 +268,6 @@ function PlayerGame({ roomId }: { roomId: string }) {
     );
   }
 
-  const sorted = [...state.teams].sort((a, b) => b.score - a.score);
-
   return (
     <main
       style={{
@@ -284,11 +282,11 @@ function PlayerGame({ roomId }: { roomId: string }) {
     >
       <h1 style={titleStyle}>🍔 BURGER QUIZ</h1>
 
-      {state.phase === "finished" && sorted.length > 0 && (
+      {state.phase === "finished" && state.teams.length > 0 && (
         <div
           style={{
-            background: `${COLOR_HEX[sorted[0].color]}22`,
-            border: `2px solid ${COLOR_HEX[sorted[0].color]}`,
+            background: `${COLOR_HEX[state.teams[0].color]}22`,
+            border: `2px solid ${COLOR_HEX[state.teams[0].color]}`,
             borderRadius: "1rem",
             padding: "0.75rem 1.5rem",
             textAlign: "center",
@@ -302,8 +300,8 @@ function PlayerGame({ roomId }: { roomId: string }) {
               fontWeight: 900,
             }}
           >
-            🏆 {sorted[0].name} gagne avec {sorted[0].score} pt
-            {sorted[0].score !== 1 ? "s" : ""} !
+            🏆 {state.teams[0].name} gagne avec {state.teams[0].score} pt
+            {state.teams[0].score !== 1 ? "s" : ""} !
           </p>
         </div>
       )}
@@ -327,7 +325,7 @@ function PlayerGame({ roomId }: { roomId: string }) {
             width: "100%",
           }}
         >
-          {sorted.map((team) => (
+          {state.teams.map((team) => (
             <TeamCard key={team.id} team={team} />
           ))}
         </div>
