@@ -166,7 +166,7 @@ function FriesStack({ score, w }: { score: number; w: number }) {
       <div style={{ display: "flex" }}>
         {Array.from({ length: 4 }, (_, i) => (
           <div key={i} style={{ width: "50px" }}>
-            <MealImg src={count > 5 + i ? images[i] : emptyImages[i]} />
+            <MealImg src={count > 1 + i ? images[i] : emptyImages[i]} />
           </div>
         ))}
       </div>
